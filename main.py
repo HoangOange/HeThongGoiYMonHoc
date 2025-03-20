@@ -12,7 +12,7 @@ st.markdown(
         color: white;
     }
     h2, h3, h4, h5, h6, p, label, div {
-        color: white !important;
+        color: black !important;
         text-align: center;
     }
     .stButton button {
@@ -34,8 +34,8 @@ similarity = pickle.load(open('models/similarity.pkl', 'rb'))
 def recommend(course):
     index = courses_list[courses_list['course_name'] == course].index[0]
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
-    recommended_course_names = [courses_list.iloc[i[0]].course_name for i in distances[1:7]]
-    return recommended_course_names
+    recommended_courses = [(courses_list.iloc[i[0]].course_name, courses_list.iloc[i[0]].course_link) for i in distances[1:7]]
+    return recommended_courses
 
 # Tạo đối tượng dịch sang tiếng Việt
 translator = GoogleTranslator(source="auto", target="vi")
@@ -52,10 +52,10 @@ st.write(f"📖 **Tên khóa học dịch:** {translated_course}")
 
 # Hiển thị các môn học gợi ý
 if st.button("🎯 Hiện các môn học gợi ý"):
-    recommended_course_names = recommend(selected_course)
+    recommended_courses = recommend(selected_course)
     st.write("📌 **Những môn học mà bạn có thể thích:**")
+    
+    for course_name, course_link in recommended_courses:
+        translated_course = translator.translate(course_name)
+        st.markdown(f'<p style="color:black; font-size:16px;">📘 <a href="{course_link}" target="_blank" style="color:black; text-decoration:none;"><b>{translated_course}</b></a></p>', unsafe_allow_html=True)
 
-    # Hiển thị danh sách gợi ý bằng markdown đẹp hơn
-    for course in recommended_course_names:
-        translated_course = translator.translate(course)
-        st.markdown(f"- Môn :  **{translated_course}**")

@@ -21,7 +21,7 @@ print("\n🔍 Số lượng giá trị thiếu trên mỗi cột:")
 print(missing_values[missing_values > 0])
 
 # Chọn các cột quan trọng
-data = data[['Course Name', 'Difficulty Level', 'Course Description', 'Skills']]
+data = data[['Course Name', 'Difficulty Level', 'Course Description', 'Skills', 'Course URL']]
 
 # Xử lý văn bản: Xóa ký tự đặc biệt và thay thế khoảng trắng
 data['Course Name'] = data['Course Name'].str.replace(r'\s+', ' ', regex=True).str.strip()
@@ -41,9 +41,9 @@ data['tags'] = data['Course Name'] + ' ' + data['Difficulty Level'] + ' ' + data
 # Đưa về chữ thường
 data['tags'] = data['tags'].str.lower()
 
-# Chuyển về dataframe mới chỉ gồm tên khóa học và tags
-new_df = data[['Course Name', 'tags']].copy()
-new_df.rename(columns={'Course Name': 'course_name'}, inplace=True)
+# Chuyển về dataframe mới chỉ gồm tên khóa học, tags và link
+new_df = data[['Course Name', 'tags', 'Course URL']].copy()
+new_df.rename(columns={'Course Name': 'course_name', 'Course URL': 'course_link'}, inplace=True)
 
 # Loại bỏ dấu phẩy trong tên khóa học và tags
 new_df['course_name'] = new_df['course_name'].str.replace(',', ' ', regex=False)
